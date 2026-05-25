@@ -46,3 +46,4 @@ videodownloader/
   - [Baixar FFmpeg](https://ffmpeg.org/download.html) → extrair → adicionar ao PATH
 - A transcrição só funciona em vídeos que têm legendas ativadas no YouTube
 - Use apenas para fins pessoais e educacionais
+"# YTDown" 
