@@ -43,21 +43,21 @@ function setSearchLoading(loading) {
 
 // ─── Modal de verificação ─────────────────────────────────────────────────
 
+let mathAnswer = null; // resposta correta da conta atual
+
 function openDownloadModal(downloadFn) {
-  // Salva a função de download para executar após o captcha
   pendingDownload = downloadFn;
-
-  // Reseta para etapa 1 (captcha)
   showStep("stepCaptcha");
+  generateMathQuestion();
 
-  // Reseta o widget do captcha (necessário para re-abrir)
-  if (window.grecaptcha) {
-    try { grecaptcha.reset(); } catch (e) {}
-  }
-
-  // Abre o modal
   document.getElementById("downloadModal").classList.remove("hidden");
   document.body.style.overflow = "hidden";
+
+  // Foca no input automaticamente
+  setTimeout(() => {
+    const inp = document.getElementById("mathAnswer");
+    if (inp) inp.focus();
+  }, 80);
 }
 
 function closeModal() {
@@ -65,10 +65,10 @@ function closeModal() {
   document.body.style.overflow = "";
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
   pendingDownload = null;
+  mathAnswer = null;
 }
 
 function handleOverlayClick(e) {
-  // Fecha se clicar fora do card
   if (e.target === document.getElementById("downloadModal")) closeModal();
 }
 
@@ -79,10 +79,70 @@ function showStep(stepId) {
   document.getElementById(stepId).classList.remove("hidden");
 }
 
-// Chamada pelo reCAPTCHA quando resolvido
-function onCaptchaSuccess(token) {
-  showStep("stepCountdown");
-  startCountdown(5);
+// ─── Math CAPTCHA ──────────────────────────────────────────────────────────
+
+function generateMathQuestion() {
+  const ops = ["+", "-", "×"];
+  const op  = ops[Math.floor(Math.random() * ops.length)];
+
+  let a, b, result;
+
+  if (op === "+") {
+    a = rand(1, 9);
+    b = rand(1, 9);
+    result = a + b;
+  } else if (op === "-") {
+    a = rand(2, 9);
+    b = rand(1, a);      // garante resultado positivo
+    result = a - b;
+  } else {               // ×
+    a = rand(2, 9);
+    b = rand(2, 9);
+    result = a * b;
+  }
+
+  mathAnswer = result;
+
+  document.getElementById("mathQuestion").textContent = `Quanto é  ${a} ${op} ${b} ?`;
+  document.getElementById("mathAnswer").value = "";
+  document.getElementById("mathError").classList.add("hidden");
+  document.getElementById("mathAnswer").classList.remove("shake");
+}
+
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function checkMathAnswer() {
+  const input = document.getElementById("mathAnswer");
+  const val   = parseInt(input.value.trim(), 10);
+  const errEl = document.getElementById("mathError");
+
+  if (isNaN(val)) {
+    shakeMathInput();
+    return;
+  }
+
+  if (val === mathAnswer) {
+    // ✅ Correto — avança para o countdown
+    showStep("stepCountdown");
+    startCountdown(5);
+  } else {
+    // ❌ Errado — shake + nova conta
+    errEl.classList.remove("hidden");
+    shakeMathInput();
+    setTimeout(() => {
+      generateMathQuestion();
+      input.focus();
+    }, 600);
+  }
+}
+
+function shakeMathInput() {
+  const inp = document.getElementById("mathAnswer");
+  inp.classList.remove("shake");
+  void inp.offsetWidth; // reinicia animação
+  inp.classList.add("shake");
 }
 
 function startCountdown(total) {

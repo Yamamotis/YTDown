@@ -152,25 +152,34 @@
     <p>Feito com ❤️ · Para uso pessoal e educacional</p>
   </footer>
 
-  <!-- reCAPTCHA v2 -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
   <!-- Modal de verificação -->
   <div id="downloadModal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()">✕</button>
 
-      <!-- Etapa 1: CAPTCHA -->
+      <!-- Etapa 1: Math CAPTCHA -->
       <div id="stepCaptcha">
-        <div class="modal-icon">🛡️</div>
+        <div class="modal-icon">🧮</div>
         <h3 class="modal-title">Verificação rápida</h3>
-        <p class="modal-desc">Confirme que você não é um robô para liberar o download.</p>
-        <div class="captcha-wrap">
-          <div class="g-recaptcha"
-               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-               data-callback="onCaptchaSuccess"
-               data-theme="dark">
+        <p class="modal-desc">Resolva a conta abaixo para liberar o download.</p>
+
+        <div class="math-captcha">
+          <div class="math-question" id="mathQuestion">?</div>
+          <div class="math-input-row">
+            <input
+              type="number"
+              id="mathAnswer"
+              class="math-input"
+              placeholder="Sua resposta"
+              autocomplete="off"
+              inputmode="numeric"
+              onkeydown="if(event.key==='Enter') checkMathAnswer()"
+            />
+            <button class="math-confirm-btn" onclick="checkMathAnswer()">
+              Confirmar →
+            </button>
           </div>
+          <p id="mathError" class="math-error hidden">❌ Resposta incorreta. Tente novamente!</p>
         </div>
       </div>
 
