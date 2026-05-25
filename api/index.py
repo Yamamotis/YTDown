@@ -1,4 +1,7 @@
 import re
+import os
+import base64
+import tempfile
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yt_dlp
@@ -7,6 +10,37 @@ from youtube_transcript_api._errors import NoTranscriptFound, TranscriptsDisable
 
 app = Flask(__name__)
 CORS(app)
+
+
+def get_ydl_opts_base():
+    """Opções base do yt-dlp. Injeta cookies se a env var YOUTUBE_COOKIES estiver definida."""
+    opts = {
+        "quiet": True,
+        "no_warnings": True,
+        # User-agent de navegador real para evitar bloqueio
+        "http_headers": {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/125.0.0.0 Safari/537.36"
+            )
+        },
+    }
+
+    cookies_b64 = os.environ.get("YOUTUBE_COOKIES", "").strip()
+    if cookies_b64:
+        try:
+            cookies_txt = base64.b64decode(cookies_b64).decode("utf-8")
+            tmp = tempfile.NamedTemporaryFile(
+                mode="w", suffix=".txt", delete=False, encoding="utf-8"
+            )
+            tmp.write(cookies_txt)
+            tmp.close()
+            opts["cookiefile"] = tmp.name
+        except Exception:
+            pass  # ignora se o decode falhar
+
+    return opts
 
 
 def extract_video_id(url: str):
@@ -31,7 +65,7 @@ def get_info():
     if not url:
         return jsonify({"error": "URL não informada."}), 400
 
-    ydl_opts = {"quiet": True, "no_warnings": True, "skip_download": True}
+    ydl_opts = {**get_ydl_opts_base(), "skip_download": True}
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -81,12 +115,7 @@ def get_video_url():
         f"/best"
     )
 
-    ydl_opts = {
-        "quiet": True,
-        "no_warnings": True,
-        "skip_download": True,
-        "format": fmt,
-    }
+    ydl_opts = {**get_ydl_opts_base(), "skip_download": True, "format": fmt}
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -123,8 +152,7 @@ def get_audio_url():
         return jsonify({"error": "URL não informada."}), 400
 
     ydl_opts = {
-        "quiet": True,
-        "no_warnings": True,
+        **get_ydl_opts_base(),
         "skip_download": True,
         "format": "bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio/best",
     }
