@@ -152,6 +152,68 @@
     <p>Feito com ❤️ · Para uso pessoal e educacional</p>
   </footer>
 
+  <!-- reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <!-- Modal de verificação -->
+  <div id="downloadModal" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+
+      <!-- Etapa 1: CAPTCHA -->
+      <div id="stepCaptcha">
+        <div class="modal-icon">🛡️</div>
+        <h3 class="modal-title">Verificação rápida</h3>
+        <p class="modal-desc">Confirme que você não é um robô para liberar o download.</p>
+        <div class="captcha-wrap">
+          <div class="g-recaptcha"
+               data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+               data-callback="onCaptchaSuccess"
+               data-theme="dark">
+          </div>
+        </div>
+      </div>
+
+      <!-- Etapa 2: Countdown -->
+      <div id="stepCountdown" class="hidden">
+        <div class="modal-icon">✅</div>
+        <h3 class="modal-title">Verificado!</h3>
+        <p class="modal-desc">Seu download começa em:</p>
+        <div class="countdown-wrap">
+          <div class="countdown-ring-wrap">
+            <svg class="countdown-svg" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+              <circle id="countdownRing" cx="50" cy="50" r="40" fill="none"
+                      stroke="url(#ringGrad)" stroke-width="8"
+                      stroke-dasharray="251.2" stroke-dashoffset="0"
+                      stroke-linecap="round"
+                      transform="rotate(-90 50 50)"/>
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FF4444"/>
+                  <stop offset="100%" stop-color="#7c5cfc"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span id="countdownNumber" class="countdown-number">5</span>
+          </div>
+          <p class="countdown-label">segundos</p>
+        </div>
+      </div>
+
+      <!-- Etapa 3: Pronto -->
+      <div id="stepDone" class="hidden">
+        <div class="modal-icon">⬇️</div>
+        <h3 class="modal-title">Pronto para baixar!</h3>
+        <p class="modal-desc">Seu download foi iniciado. Se não começar automaticamente, clique abaixo.</p>
+        <button class="btn-download-now" onclick="retryDownload()">
+          Baixar novamente
+        </button>
+        <button class="btn-close-modal" onclick="closeModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
