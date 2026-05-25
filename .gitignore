@@ -1,0 +1,6 @@
+backend/venv/
+backend/downloads/
+__pycache__/
+*.pyc
+.env
+.vercel

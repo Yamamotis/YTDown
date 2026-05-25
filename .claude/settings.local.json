@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(python3 --version 2>$null)",
+      "PowerShell(py --version 2>$null)",
+      "PowerShell(py --version)",
+      "PowerShell(Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\" -ErrorAction SilentlyContinue | Select-Object -First 20 Name)",
+      "PowerShell($env:PATH -split \";\" | Where-Object { $_ -match \"python|conda|miniconda|anaconda\" })",
+      "PowerShell(& \"C:\\\\Users\\\\Mathe\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe\" --version)",
+      "Bash(ls \"/c/Users/Mathe/AppData/Local/Programs/Python/Python311/\" 2>/dev/null | head -20)",
+      "Read(//c/Users/Mathe/AppData/Local/Programs/Python/Python311//**)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
+    ]
+  }
+}

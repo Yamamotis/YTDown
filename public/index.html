@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YT Downloader</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="10" fill="#FF4444"/>
+        <polygon points="13,10 23,16 13,22" fill="white"/>
+      </svg>
+      <span>YT<strong>Down</strong></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Baixe do YouTube<br/><span class="gradient-text">em segundos</span></h1>
+      <p class="subtitle">Vídeo, áudio MP3 ou transcrição completa — tudo gratuito e sem cadastro.</p>
+
+      <div class="search-box">
+        <input
+          type="text"
+          id="urlInput"
+          placeholder="Cole o link do YouTube aqui..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="searchBtn" onclick="fetchInfo()">
+          <span id="searchBtnText">Buscar</span>
+          <svg id="searchSpinner" class="spinner hidden" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/>
+          </svg>
+        </button>
+      </div>
+      <p id="urlError" class="error-msg hidden"></p>
+    </section>
+
+    <!-- Card de resultado -->
+    <section id="resultCard" class="result-card hidden">
+      <div class="video-info">
+        <img id="thumbnail" src="" alt="thumbnail" />
+        <div class="video-meta">
+          <h2 id="videoTitle"></h2>
+          <p id="videoChannel"></p>
+          <p id="videoDuration"></p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="video" onclick="switchTab('video')">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h6l2 2h4a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+          Vídeo
+        </button>
+        <button class="tab" data-tab="audio" onclick="switchTab('audio')">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/></svg>
+          Áudio
+        </button>
+        <button class="tab" data-tab="transcript" onclick="switchTab('transcript')">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+          Transcrição
+        </button>
+      </div>
+
+      <!-- Painel Vídeo -->
+      <div id="tab-video" class="tab-panel active">
+        <p class="tab-desc">Escolha a qualidade desejada e clique em baixar:</p>
+        <div id="formatList" class="format-list"></div>
+        <div id="videoProgress" class="progress-wrap hidden">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill animated-progress"></div>
+          </div>
+          <p class="progress-label">Preparando download... isso pode levar alguns segundos ⏳</p>
+        </div>
+      </div>
+
+      <!-- Painel Áudio -->
+      <div id="tab-audio" class="tab-panel">
+        <p class="tab-desc">Baixe o áudio do vídeo em <strong>M4A</strong> (compatível com todos os players):</p>
+        <button class="btn-download btn-audio" onclick="downloadAudio()">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          Baixar Áudio
+        </button>
+        <div id="audioProgress" class="progress-wrap hidden">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill animated-progress"></div>
+          </div>
+          <p class="progress-label">Extraindo áudio... aguarde ⏳</p>
+        </div>
+      </div>
+
+      <!-- Painel Transcrição -->
+      <div id="tab-transcript" class="tab-panel">
+        <p class="tab-desc">Obtenha a transcrição completa do vídeo:</p>
+        <button class="btn-download btn-transcript" onclick="fetchTranscript()">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h7a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+          Gerar Transcrição
+        </button>
+        <div id="transcriptLoading" class="progress-wrap hidden">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill animated-progress"></div>
+          </div>
+          <p class="progress-label">Buscando transcrição... ⏳</p>
+        </div>
+        <div id="transcriptResult" class="transcript-box hidden">
+          <div class="transcript-toolbar">
+            <span id="transcriptLang" class="lang-badge"></span>
+            <div class="transcript-actions">
+              <button onclick="toggleTimestamps()" id="btnTimestamps" class="btn-sm">⏱ Com timestamps</button>
+              <button onclick="copyTranscript()" class="btn-sm">📋 Copiar</button>
+              <button onclick="downloadTranscript()" class="btn-sm">💾 Salvar .txt</button>
+            </div>
+          </div>
+          <div id="transcriptContent" class="transcript-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🎬</div>
+        <h3>Vídeo HD</h3>
+        <p>Baixe em até 4K com todas as qualidades disponíveis</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h3>Áudio MP3</h3>
+        <p>Extrai o áudio em alta qualidade (192kbps)</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Transcrição</h3>
+        <p>Texto completo com timestamps e suporte a vários idiomas</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Feito com ❤️ · Para uso pessoal e educacional</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
