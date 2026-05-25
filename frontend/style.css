@@ -381,6 +381,201 @@ main {
 .feature-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
 .feature-card p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
 
+/* ─── Tutorial ──────────────────────────────────────────────────────────────── */
+.tutorial {
+  margin-top: 48px;
+}
+
+.tutorial-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.tutorial-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.tutorial-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Steps */
+.steps {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.step {
+  display: flex;
+  gap: 20px;
+  padding: 24px 28px;
+  align-items: flex-start;
+}
+
+.step-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 28px;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--accent));
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.step-body h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.step-body p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.step-body p:last-child { margin-bottom: 0; }
+
+.step-example {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 8px;
+}
+.step-example-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.step-example code {
+  font-size: 0.8rem;
+  color: var(--accent2);
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+}
+
+.step-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 8px;
+}
+.step-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+  border: 1.5px solid;
+}
+.tag-video    { color: var(--red);    border-color: rgba(255,68,68,0.4);    background: rgba(255,68,68,0.08); }
+.tag-audio    { color: var(--accent); border-color: rgba(124,92,252,0.4);   background: rgba(124,92,252,0.08); }
+.tag-transcript { color: var(--accent2); border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.08); }
+
+.step-note {
+  font-size: 0.82rem !important;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.step-captcha-demo {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.demo-question {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  width: fit-content;
+}
+.demo-arrow {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  padding-left: 4px;
+}
+
+/* FAQ */
+.faq {
+  margin-top: 8px;
+}
+.faq h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.faq-item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.faq-item:hover { border-color: rgba(255,255,255,0.15); }
+.faq-item[open] { border-color: var(--red); }
+
+.faq-item summary {
+  padding: 14px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.faq-item[open] summary::after {
+  content: "−";
+  color: var(--red);
+}
+
+.faq-item p {
+  padding: 0 18px 14px;
+  font-size: 0.87rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.faq-item p strong { color: var(--text); }
+
 /* Footer */
 footer {
   position: relative;
