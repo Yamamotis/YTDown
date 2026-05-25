@@ -25,7 +25,7 @@ echo [2/3] Ativando ambiente virtual...
 call venv\Scripts\activate.bat
 
 echo [3/3] Instalando bibliotecas...
-pip install -r requirements.txt
+pip install -r requirements-local.txt
 
 echo.
 echo ============================================
